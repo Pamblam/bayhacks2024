@@ -2,6 +2,24 @@
 
 import argparse
 import json
+import mysql.connector
+
+environment='local'
+
+if(environment=='local'):
+  mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="bijoux22",
+    database="diseases"
+  )
+else:
+  mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="bayhacks",
+    database="diseases"
+  )
 
 # Get the program input
 parser=argparse.ArgumentParser()
@@ -11,7 +29,6 @@ data = json.loads(args.json)
 
 # Set our response object
 response = {'message': '', 'response': {}, 'success': True}
-
 
 # Function to encode and send the output of the program
 def out():
@@ -27,8 +44,23 @@ def err(msg):
 # Do something, depending on what the request is asking for
 action = data['action']
 
-if(action == "greet"):
-    response['response'] = "u suck "+data['name']
+if(action == "search_symptoms"):
+    symptom=data['symptom']
+    mycursor = mydb.cursor()
+
+    mycursor.execute("select * from (select id, name from items union all select synonym_id as id, text as name from synonyms) as q where q.name like %s", ["%"+symptom+"%"])
+
+    myresult = mycursor.fetchall()
+
+
+
+
+
+
+
+
+
+    response['response'] = myresult
 
 elif(action == "add"):
     num1 = float(data['num1'])
