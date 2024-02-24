@@ -4,10 +4,13 @@ The repo for the project.
 
 # Server connection info
 
+### Host
+45.55.44.140
+
 ### Root user
-root
-!224BayHacks
+user: `root`
+password: `!224BayHacks`
 
 ### Regular user
-root
-!224BayHacks
+user: `dev`
+password: `!224BayHacks`
