@@ -49,7 +49,7 @@ if(action == "search_symptoms"):
     symptom=data['symptom']
     mycursor = mydb.cursor()
 
-    mycursor.execute("select * from (select id, name from items union all select synonym_id as id, text as name from synonyms) as q where q.name like %s", ["%"+symptom+"%"])
+    mycursor.execute("select distinct * from (select id, name from items union all select synonym_id as id, text as name from synonyms) as q where q.name like %s", ["%"+symptom+"%"])
 
     myresult = mycursor.fetchall()
 
