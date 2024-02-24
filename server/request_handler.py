@@ -6,6 +6,7 @@ import mysql.connector
 
 environment='remote'
 
+
 if(environment=='local'):
   mydb = mysql.connector.connect(
     host="localhost",
@@ -55,6 +56,7 @@ if(action == "search_symptoms"):
     response['response'] = myresult
 
 elif(action == "symptom_match"):
+    disease_count = 0
     ids = data["ids"]
     id_list = ids.split(",")
     matches = []
@@ -76,7 +78,7 @@ elif(action == "symptom_match"):
 
 
     # Looking for other symptoms of diseases that include initial symptom list
-    causes_list = []
+    symptoms_list = []
     for disease in matches:
 
         symptoms_found = {}
@@ -106,24 +108,25 @@ elif(action == "symptom_match"):
                 all_exist = False
 
         if all_exist:
+            disease_count += 1
             for result in myresult:
                 # does the symptom exist in the list
                 exists = False
                 # {symptom:"name", id:0, match_count:1}
-                for cause in causes_list:
-                    if cause["id"] == result[1]:
+                for symptom in symptoms_list:
+                    if symptom["id"] == result[1]:
                         exists = True
-                        cause["match_count"] += 1
+                        symptom["match_count"] += 1
                 if exists == False:
-                    causes_list.append({"symptom": result[0], "match_count": 1, "id": result[1]})
+                    symptoms_list.append({"symptom": result[0], "match_count": 1, "id": result[1]})
         
         
 
-    sorted_causes_list = sorted(causes_list, key = lambda i: i["match_count"], reverse=True) 
+    sorted_symptoms_list = sorted(symptoms_list, key = lambda i: i["match_count"], reverse=True) 
     if limit: 
-        response['response'] = sorted_causes_list[:int(limit)]
+        response['response'] = {'count':disease_count, "result":sorted_symptoms_list[:int(limit)]}
     else:
-        response['response'] = sorted_causes_list
+        response['response'] = {'count':disease_count, "result":sorted_symptoms_list}
     # print(matches)
 
 
