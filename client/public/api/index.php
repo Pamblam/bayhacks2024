@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 
 define("APP_ROOT", realpath(dirname(dirname(dirname(dirname(__FILE__))))));
 require APP_ROOT."/server/includes/runcmd.php";
