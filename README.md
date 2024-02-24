@@ -14,3 +14,7 @@ password: `!224BayHacks`
 ### Regular user
 user: `dev`
 password: `!224BayHacks`
+
+# Mysql creds
+user: `dev`
+password: `!224BayHacks`
