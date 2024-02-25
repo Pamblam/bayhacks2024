@@ -49,7 +49,7 @@ if(action == "search_symptoms"):
     symptom=data['symptom']
     mycursor = mydb.cursor()
 
-    mycursor.execute("select distinct * from (select id, name from items union all select synonym_id as id, text as name from synonyms) as q where q.name like %s", ["%"+symptom+"%"])
+    mycursor.execute("select distinct * from (select id, name, type from items union all select synonym_id as id, text as name, null as type from synonyms) as q where q.name like %s and type is null", ["%"+symptom+"%"])
 
     myresult = mycursor.fetchall()
 
@@ -76,7 +76,6 @@ elif(action == "symptom_match"):
                 matches.append(cause_id)
 
 
-
     # Looking for other symptoms of diseases that include initial symptom list
     symptoms_list = []
     for disease in matches:
@@ -88,7 +87,7 @@ elif(action == "symptom_match"):
 
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT i.name, c.effect_item_id FROM diseases.cause_effect as c left join items as i on c.effect_item_id = i.id where cause_item_id = %s", [disease])
+        mycursor.execute("SELECT i.name, c.effect_item_id, i.type FROM diseases.cause_effect as c left join items as i on c.effect_item_id = i.id where cause_item_id = %s and i.type is null", [disease])
         myresult = mycursor.fetchall()
 
         # looping thru symptoms of, just to see if all items are present 
@@ -128,6 +127,64 @@ elif(action == "symptom_match"):
     else:
         response['response'] = {'count':disease_count, "result":sorted_symptoms_list}
     # print(matches)
+
+elif(action == "detail"):
+    disease_count = 0
+    ids = data["ids"]
+    id_list = ids.split(",")
+    matches = []
+
+    for id in id_list:
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT cause_item_id FROM diseases.cause_effect where effect_item_id = %s", [id])
+        myresult = mycursor.fetchall()
+        for item in myresult:
+            cause_id = item[0]
+            if cause_id not in matches:
+                matches.append(cause_id)
+
+
+    symptoms_list = []
+    for disease in matches:
+
+        symptoms_found = {}
+        for id in id_list:
+            id = int(id)
+            symptoms_found[id] = False
+
+
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT i.name, c.effect_item_id, i.type FROM diseases.cause_effect as c left join items as i on c.effect_item_id = i.id where cause_item_id = %s and i.type is null", [disease])
+        myresult = mycursor.fetchall()
+
+        # looping thru symptoms of, just to see if all items are present 
+        for result in myresult:
+            id = result[1]
+            id = int(id)
+            # if id in symptoms_found:
+            if id in symptoms_found.keys():
+                symptoms_found[id] = True
+
+
+        all_exist = True
+        for key in symptoms_found:
+            if symptoms_found[key]== False:
+                all_exist = False
+
+        
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT text, concat(\"http://www.diseasesdatabase.com/\",url) as url FROM diseases.page_links where item_id = %s", [disease])
+        myresult = mycursor.fetchall()
+
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT name FROM diseases.items where id = %s", [disease])
+        name = mycursor.fetchall()
+
+        response['response'] = {'name': name[0][0], 'links': myresult}
+
+        
+        break
+        
 
 
 else:
