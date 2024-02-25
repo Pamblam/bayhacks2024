@@ -4,7 +4,7 @@ import argparse
 import json
 import mysql.connector
 
-environment='remote'
+environment='local'
 
 
 if(environment=='local'):
@@ -142,7 +142,50 @@ elif(action == "detail"):
             cause_id = item[0]
             if cause_id not in matches:
                 matches.append(cause_id)
-    print(matches)
+
+
+    symptoms_list = []
+    for disease in matches:
+
+        symptoms_found = {}
+        for id in id_list:
+            id = int(id)
+            symptoms_found[id] = False
+
+
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT i.name, c.effect_item_id, i.type FROM diseases.cause_effect as c left join items as i on c.effect_item_id = i.id where cause_item_id = %s and i.type is null", [disease])
+        myresult = mycursor.fetchall()
+
+        # looping thru symptoms of, just to see if all items are present 
+        for result in myresult:
+            id = result[1]
+            id = int(id)
+            # if id in symptoms_found:
+            if id in symptoms_found.keys():
+                symptoms_found[id] = True
+
+
+        all_exist = True
+        for key in symptoms_found:
+            if symptoms_found[key]== False:
+                all_exist = False
+
+        
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT text, concat(\"http://www.diseasesdatabase.com/\",url) as url FROM diseases.page_links where item_id = %s", [disease])
+        myresult = mycursor.fetchall()
+
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT name FROM diseases.items where id = %s", [disease])
+        name = mycursor.fetchall()
+
+        response['response'] = {'name': name[0][0], 'links': myresult}
+
+        
+        break
+        
+
 
 else:
     err('Invalid action')
