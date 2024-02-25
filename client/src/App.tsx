@@ -19,7 +19,7 @@ function App() {
   const getSymptoms = async () => {
     return axios
       .get(
-        `http://45.55.44.140/api/?action=search_symptoms&symptom=` +
+        `https://medicheck.pro/api/?action=search_symptoms&symptom=` +
           `${inputValue}`
       )
       .then((res) => setSearchSymptom(res.data.response.slice(0, 10)))

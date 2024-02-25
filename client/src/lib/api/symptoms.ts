@@ -8,7 +8,7 @@ interface ApiResponse {
 async function searchSymptoms(symptom: string): Promise<ApiResponse> {
   try {
     const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
-    const apiUrl = 'http://45.55.44.140/api/?action=search_symptoms';
+    const apiUrl = 'https://medicheck.pro/api/?action=search_symptoms';
     const requestData = {
       symptom: symptom
     };
