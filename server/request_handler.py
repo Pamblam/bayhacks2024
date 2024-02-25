@@ -76,7 +76,6 @@ elif(action == "symptom_match"):
                 matches.append(cause_id)
 
 
-
     # Looking for other symptoms of diseases that include initial symptom list
     symptoms_list = []
     for disease in matches:
@@ -129,6 +128,21 @@ elif(action == "symptom_match"):
         response['response'] = {'count':disease_count, "result":sorted_symptoms_list}
     # print(matches)
 
+elif(action == "detail"):
+    disease_count = 0
+    ids = data["ids"]
+    id_list = ids.split(",")
+    matches = []
+
+    for id in id_list:
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT cause_item_id FROM diseases.cause_effect where effect_item_id = %s", [id])
+        myresult = mycursor.fetchall()
+        for item in myresult:
+            cause_id = item[0]
+            if cause_id not in matches:
+                matches.append(cause_id)
+    print(matches)
 
 else:
     err('Invalid action')

@@ -8,13 +8,13 @@ The repo for the project.
 45.55.44.140
 
 ### Root user
-user: `root`
-password: `!224BayHacks`
+ - user: `root`
+ - password: `!224BayHacks`
 
 ### Regular user
-user: `dev`
-password: `!224BayHacks`
+ - user: `dev`
+ - password: `!224BayHacks`
 
 # Mysql creds
-user: `dev`
-password: `!224BayHacks`
+ - user: `root`
+ - password: `bayhacks`
