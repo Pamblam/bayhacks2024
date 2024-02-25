@@ -4,7 +4,7 @@ import argparse
 import json
 import mysql.connector
 
-environment='local'
+environment='remote'
 
 
 if(environment=='local'):
