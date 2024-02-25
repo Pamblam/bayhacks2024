@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "https://medicheck.pro/static/css/main.5512f6c7.css",
-    "main.js": "https://medicheck.pro/static/js/main.32882252.js",
+    "main.css": "https://medicheck.pro/static/css/main.78331527.css",
+    "main.js": "https://medicheck.pro/static/js/main.92243902.js",
     "index.html": "https://medicheck.pro/index.html",
-    "main.5512f6c7.css.map": "https://medicheck.pro/static/css/main.5512f6c7.css.map",
-    "main.32882252.js.map": "https://medicheck.pro/static/js/main.32882252.js.map"
+    "main.78331527.css.map": "https://medicheck.pro/static/css/main.78331527.css.map",
+    "main.92243902.js.map": "https://medicheck.pro/static/js/main.92243902.js.map"
   },
   "entrypoints": [
-    "static/css/main.5512f6c7.css",
-    "static/js/main.32882252.js"
+    "static/css/main.78331527.css",
+    "static/js/main.92243902.js"
   ]
 }
