@@ -2,19 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Input } from "../src/components/ui/input";
 import axios from "axios";
 import { ScrollArea } from "../src/components/ui/scroll-area";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../src/components/ui/card"
-
+import { Card, CardDescription, CardHeader } from "../src/components/ui/card";
 
 function App() {
   const [inputValue, setInputValue] = useState<string>("");
-  const [searchSymptom, setSearchSymptom] = useState<string[] | null>([]);
+  const [searchSymptom, setSearchSymptom] = useState<string[] | null>(null);
 
   const getSymptoms = async () => {
     return axios
@@ -56,18 +48,21 @@ function App() {
   return (
     <div className="App">
       <div className="flex justify-center items-center h-screen">
-        <Card className="border w-[500px] m-auto p-5">
-          <CardHeader>Could you please tell me what symptoms you're currently experiencing?</CardHeader>
+        <Card className="border w-[500px] m-auto p-5 shadow-lg">
+          <CardHeader>
+            Could you please tell me what symptoms you're currently
+            experiencing?
+          </CardHeader>
           <Input
-            className="w-full"
+            className="w-full relative"
             placeholder="Your Sympton"
             onChange={handleChange}
             onBlur={handleBlur} // Add onBlur event handler
             value={inputValue} // Pass inputValue as value prop
           />
-          <ScrollArea className="h-72 w-full">
-            <div className="mx-5 py-4 border">
-              {searchSymptom !== null && (
+          {searchSymptom !== null && (
+            <ScrollArea className="h-72 w-full mt-4 rounded z-30 absolute">
+              <div className="py-4 border">
                 <ul>
                   {searchSymptom.map((symptom, index) => (
                     <li
@@ -78,10 +73,12 @@ function App() {
                     </li>
                   ))}
                 </ul>
-              )}
-              {!searchSymptom && null}
-            </div>
-          </ScrollArea>
+              </div>
+            </ScrollArea>
+          )}
+          <CardDescription>
+            <span className="p-2"></span>
+          </CardDescription>
         </Card>
       </div>
     </div>
