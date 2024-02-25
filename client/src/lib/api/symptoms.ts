@@ -1,3 +1,5 @@
+import axios from "axios";
+
 interface ApiResponse {
   // Define the structure of the response data
   // You need to adjust this based on the actual response from your API
@@ -5,45 +7,25 @@ interface ApiResponse {
   data: any;
 }
 
-async function searchSymptoms(symptom: string): Promise<ApiResponse> {
-  try {
-    const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
-    const apiUrl = 'https://medicheck.pro/api/?action=search_symptoms';
-    const requestData = {
-      symptom: symptom
-    };
+export const getSymptoms = async (inputValue: string) => {
+  return axios
+    .get(
+      `https://medicheck.pro/api/?action=search_symptoms&symptom=` +
+        `${inputValue}`
+    )
+    .then((res) => res.data.response.slice(0, 10))
+    .catch((err) => console.log(err));
+};
 
-    const response = await fetch(corsAnywhereUrl + apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const responseData: ApiResponse = await response.json();
-    return responseData;
-  } catch (error) {
-    // Handle errors here
-    console.error('Error occurred during API request:', error);
-    throw error;
-  }
+export const getMatchingSymptoms = async (matchingSymptom: string) => {
+  console.log(matchingSymptom)
+  return axios
+  .get(
+    `https://www.medicheck.pro/api/?action=symptom_match&ids=` +
+      `${matchingSymptom}`
+  )
+  .then((res) => res.data.response)
+  .catch((err) => err);
 }
 
-// Example usage
-(async () => {
-  try {
-    const symptom = 'cough';
-    const apiResponse = await searchSymptoms(symptom);
-    console.log('API response:', apiResponse);
-  } catch (error) {
-    // Handle errors from the API function
-    console.error('Error occurred during API request:', error);
-  }
-})();
 
-  export { searchSymptoms }
