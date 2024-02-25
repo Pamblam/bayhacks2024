@@ -49,7 +49,7 @@ if(action == "search_symptoms"):
     symptom=data['symptom']
     mycursor = mydb.cursor()
 
-    mycursor.execute("select distinct * from (select id, name from items union all select synonym_id as id, text as name from synonyms) as q where q.name like %s", ["%"+symptom+"%"])
+    mycursor.execute("select distinct * from (select id, name, type from items union all select synonym_id as id, text as name, null as type from synonyms) as q where q.name like %s and type is null", ["%"+symptom+"%"])
 
     myresult = mycursor.fetchall()
 
@@ -88,7 +88,7 @@ elif(action == "symptom_match"):
 
 
         mycursor = mydb.cursor()
-        mycursor.execute("SELECT i.name, c.effect_item_id FROM diseases.cause_effect as c left join items as i on c.effect_item_id = i.id where cause_item_id = %s", [disease])
+        mycursor.execute("SELECT i.name, c.effect_item_id, i.type FROM diseases.cause_effect as c left join items as i on c.effect_item_id = i.id where cause_item_id = %s and i.type is null", [disease])
         myresult = mycursor.fetchall()
 
         # looping thru symptoms of, just to see if all items are present 
